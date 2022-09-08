@@ -32,33 +32,33 @@ ptd_calculate_point_type <- function(.data, improvement_direction) {
     ungroup()
 }
 
-ptd_seven_point_one_side_mean <- function(v) {
-  # pad the vector with 6 zero's at the beginning
-  vp <- c(rep(0, 6), v)
-  vapply(seq_along(v) + 6, function(i) {
-    all(vp[[i]] == vp[i - 1:6]) & vp[[i]] != 0
+ptd_six_point_one_side_mean <- function(v) {
+  # pad the vector with 5 zero's at the beginning
+  vp <- c(rep(0, 5), v)
+  vapply(seq_along(v) + 5, function(i) {
+    all(vp[[i]] == vp[i - 1:5]) & vp[[i]] != 0
   }, numeric(1))
 }
 
-ptd_part_of_seven_trend <- function(v) {
-  # pad the vector with 6 zero's at the beginning
-  vp <- c(v, rep(0, 6))
-  # either, this value is already part of 7, or one of the following 6 points is
+ptd_part_of_six_trend <- function(v) {
+  # pad the vector with 5 zero's at the beginning
+  vp <- c(v, rep(0, 5))
+  # either, this value is already part of 6, or one of the following 6 points is
   vapply(seq_along(v), function(i) {
-    any(vp[i + 0:6] == 1)
+    any(vp[i + 0:5] == 1)
   }, numeric(1))
 }
 
-ptd_seven_point_trend <- function(y) {
-  # edge case: length(v) < 7
-  if (length(y) < 7) {
+ptd_six_point_trend <- function(y) {
+  # edge case: length(v) < 6
+  if (length(y) < 6) {
     return(numeric(length(y)))
   }
-  # the first 6 points will be 0
+  # the first 5 points will be 0
   c(
-    rep(0, 6),
-    vapply(seq_along(y)[-(1:6)], function(i) { # Exclude Linting
-      d <- sign(diff(y[i - 0:6])) * -1
+    rep(0, 5),
+    vapply(seq_along(y)[-(1:5)], function(i) { # Exclude Linting
+      d <- sign(diff(y[i - 0:5])) * -1
       if (all(d == 1)) {
         return(1)
       }
@@ -90,14 +90,14 @@ ptd_part_of_two_in_three <- function(v, x) {
 }
 
 ptd_special_cause_flag <- function(y, relative_to_mean, close_to_limits, outside_limits) {
-  part_seven_point_one_side_mean <- ptd_part_of_seven_trend(ptd_seven_point_one_side_mean(relative_to_mean))
-  part_seven_point_trend <- ptd_part_of_seven_trend(ptd_seven_point_trend(y))
+  part_six_point_one_side_mean <- ptd_part_of_six_trend(ptd_six_point_one_side_mean(relative_to_mean))
+  part_six_point_trend <- ptd_part_of_six_trend(ptd_six_point_trend(y))
   part_two_in_three <- ptd_part_of_two_in_three(ptd_two_in_three(close_to_limits, relative_to_mean), close_to_limits)
 
   as.numeric(
     abs(outside_limits) == 1 |
-      abs(part_seven_point_one_side_mean) == 1 |
-      abs(part_seven_point_trend) == 1 |
+      abs(part_six_point_one_side_mean) == 1 |
+      abs(part_six_point_trend) == 1 |
       part_two_in_three == 1
   )
 }
