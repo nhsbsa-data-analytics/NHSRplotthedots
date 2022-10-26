@@ -31,7 +31,7 @@
 #' @param ... currently ignored
 #' @return The ggplot2 object
 #' @export
-ptd_create_ggplot <- function(x,
+ptd_create_ggplot_tooltip <- function(x,
                               point_size = 4,
                               percentage_y_axis = FALSE,
                               main_title,
@@ -123,7 +123,7 @@ ptd_create_ggplot <- function(x,
   break_limits <- break_lines %in% c("both", "limits")
   break_process <- break_lines %in% c("both", "process")
 
-  plot <- ggplot(.data, aes(x = .data$x, y = .data$y, text = paste("Month:", format(.data$x, "%b %y"),"\n", 
+  plot <- ggplot(.data, aes(x = .data$x, y = .data$y, text = paste("Month:", format(.data$x, "%b %y"),"\n",
                                                                    "Value:", round(.data$y,0),"\n",
                                                                    "UCL:", round(.data$upl,0),"\n",
                                                                    "LCL", round(.data$lpl, 0)
@@ -218,7 +218,7 @@ ptd_create_ggplot <- function(x,
   plot
 }
 
-#' @rdname ptd_create_ggplot
+#' @rdname ptd_create_ggplot_tooltip
 #' @export
 #' @noRd
 plot.ptd_spc_df <- function(x,
@@ -240,7 +240,7 @@ plot.ptd_spc_df <- function(x,
                             ...) {
   break_lines <- match.arg(break_lines)
 
-  ptd_create_ggplot(
+  ptd_create_ggplot_tooltip(
     x,
     point_size,
     percentage_y_axis,
