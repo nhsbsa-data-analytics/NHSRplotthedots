@@ -124,9 +124,10 @@ ptd_create_ggplot_tooltip <- function(x,
   break_process <- break_lines %in% c("both", "process")
 
   plot <- ggplot(.data, aes(x = .data$x, y = .data$y, text = paste("Month:", format(.data$x, "%b %y"),"\n",
-                                                                   "Value:", round(.data$y,0),"\n",
-                                                                   "UCL:", round(.data$upl,0),"\n",
-                                                                   "LCL", round(.data$lpl, 0)
+                                                                   "Value:", .data$yy,"\n",
+                                                                   "Mean:", .data$av, "\n",
+                                                                   "UCL:", .data$ulim,"\n",
+                                                                   "LCL", .data$llim
   ))) +
     geom_line(aes(y = .data$upl, text = paste("UCL:", .data$upl), group = if (break_limits) .data$rebase_group else 0),
               linetype = "dashed", size = line_size, colour = colours$upl
@@ -140,7 +141,7 @@ ptd_create_ggplot_tooltip <- function(x,
     geom_line(aes(y = .data$trajectory),
               linetype = "dashed", size = line_size, colour = colours$trajectory, na.rm = TRUE
     ) +
-    geom_line(aes(y = mean, text = paste("Mean:", round(.data$mean,0)),group = if (break_limits) .data$rebase_group else 0),
+    geom_line(aes(y = mean,group = if (break_limits) .data$rebase_group else 0),
               linetype = "solid", colour = colours$mean_line
     ) +
     geom_line(aes(group = if (break_process) .data$rebase_group else 0),
